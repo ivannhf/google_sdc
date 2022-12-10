@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(google_sdc)
 
+set(CMAKE_CXX_FLAGS -std=c++11)
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
 
@@ -13,6 +18,9 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   std_msgs
 )
+find_package(Ceres REQUIRED)
+find_package(Threads REQUIRED)
+find_package(OpenCV)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -119,12 +127,20 @@ catkin_package(
 include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
+  ${CERES_INCLUDE_DIRS}
+  ${OpenCV_INCLUDE_DIRS}
+  # src/RTKLIB/src
+  # src/RTKLIB/src/rcv
+  src/rtklib_demo5
 )
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/google_sdc.cpp
 # )
+# file(GLOB_RECURSE rtklib_file "src/RTKLIB/src/*.c")
+file(GLOB_RECURSE rtklib_file "src/rtklib_demo5/*.c")
+add_library(rtklibLib ${rtklib_file})
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
